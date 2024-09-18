@@ -8,7 +8,7 @@ services:
       - "5984:5984"
     volumes:
       - couchdb-vol-1:/opt/couchdb/data
-  couchdb-2:
+  couchdb-2:  
     extends:
       file: base/base-couchdb.yml
       service: base-couchdb
@@ -26,16 +26,25 @@ services:
       - "5986:5984"
     volumes:
       - couchdb-vol-3:/opt/couchdb/data
+  
+  portainer:
+    image: portainer/portainer-ce:alpine
+    container_name: portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - couchdb-network
 
 volumes:
   couchdb-vol-1:
   couchdb-vol-2:
   couchdb-vol-3:
+  portainer_data:
 
 networks:
   couchdb-network:
-    ipam:
-      driver: bridge
-      config:
-        - subnet: 172.17.0.0/16
-          gateway: 172.17.0.1
+    driver: bridge
